@@ -1,7 +1,7 @@
 package com.fatec.javaweb.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fatec.javaweb.desrializer.RendimentoDeserializer;
+import com.fatec.javaweb.deserializer.RendimentoDeserializer;
 
 public class ComponenteFolhaPagamento implements BaseModel {
 	private String nome;

@@ -1,4 +1,4 @@
-package com.fatec.javaweb.desrializer;
+package com.fatec.javaweb.deserializer;
 
 import java.io.IOException;
 import java.text.NumberFormat;
