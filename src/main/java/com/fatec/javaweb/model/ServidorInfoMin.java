@@ -1,12 +1,20 @@
 package com.fatec.javaweb.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fatec.javaweb.deserializer.RendimentoDeserializer;
-
+@Entity
 public class ServidorInfoMin implements BaseModel {
 
 	
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	private String rgf;
 	private String nome;
 	private String cargo;
