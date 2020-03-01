@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fatec.javaweb.ServidorInfoMinDAO;
 import com.fatec.javaweb.model.ConjuntoServidores;
 import com.fatec.javaweb.model.ServidorInfoMax;
 import com.fatec.javaweb.model.ServidorInfoMin;
+import com.fatec.javaweb.repository.ServidorInfoMinRepository;
 import com.fatec.javaweb.service.CrawlerPortalTransparencia;
 
 @Controller
 @RequestMapping("")
 public class inicialController {
-	
 	@Autowired
-	ServidorInfoMinDAO servidorInfoMinDAO;
-	
+	ServidorInfoMinRepository servidorInfoMinRepository;
 	
 	
 	@GetMapping(value = "")
@@ -38,7 +36,7 @@ public class inicialController {
 		
 		List<ServidorInfoMin> servidores = crawler.getConjuntoServidores().getServidores();
 		for (int i = 0; i < 10; i++) {
-			servidorInfoMinDAO.save(servidores.get(i));
+			servidorInfoMinRepository.save(servidores.get(i));
 			System.err.println(i);
 		}
 		try {
@@ -70,6 +68,6 @@ public class inicialController {
 	@GetMapping(value = "/doBanco")
 	@ResponseBody
 	public List<ServidorInfoMin> listaInseridosNoBanco() {
-		return servidorInfoMinDAO.findAll();
+		return servidorInfoMinRepository.findAll();
 	}
 }
