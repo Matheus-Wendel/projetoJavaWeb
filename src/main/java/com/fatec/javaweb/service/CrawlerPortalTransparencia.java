@@ -1,6 +1,7 @@
 package com.fatec.javaweb.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -8,9 +9,16 @@ import java.util.concurrent.TimeUnit;
 import org.jsoup.Jsoup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fatec.javaweb.deserializer.ReferenciaDeserializer;
 import com.fatec.javaweb.model.ConjuntoServidores;
 import com.fatec.javaweb.model.ServidorInfoMax;
 import com.fatec.javaweb.model.ServidorInfoMin;
+import com.fatec.javaweb.model.Salario.Desconto;
+import com.fatec.javaweb.model.Salario.Outro;
+import com.fatec.javaweb.model.Salario.Rendimento;
+import com.fatec.javaweb.model.Salario.Salario;
+import com.fatec.javaweb.model.Salario.Total;
 
 public class CrawlerPortalTransparencia {
 
@@ -42,8 +50,8 @@ public class CrawlerPortalTransparencia {
 			String jsonServidorInfoMax = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute()
 					.body();
 
-			ServidorInfoMax servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMax.class);
-			ListaServidorInfoMax.add(servidor);
+			ServidorInfoMaxJson servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMaxJson.class);
+			ListaServidorInfoMax.add(servidor.converterParaServidorInfoMax());
 		}
 		paraTimer();
 		return ListaServidorInfoMax;
@@ -59,8 +67,25 @@ public class CrawlerPortalTransparencia {
 			String jsonServidorInfoMax = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute()
 					.body();
 
-			ServidorInfoMax servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMax.class);
-			ListaServidorInfoMax.add(servidor);
+			ServidorInfoMaxJson servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMaxJson.class);
+			ListaServidorInfoMax.add(servidor.converterParaServidorInfoMax());
+		}
+		paraTimer();
+		return ListaServidorInfoMax;
+
+	}
+
+	public List<ServidorInfoMax> getServidoresInfoMax(List<ServidorInfoMin> listaServidoresInfoMin,
+			int quantidadeServidores) throws IOException {
+
+		List<ServidorInfoMax> ListaServidorInfoMax = new ArrayList<>();
+		iniciaTimer();
+		for (int i = 0; i < quantidadeServidores; i++) {
+			String rgf = listaServidoresInfoMin.get(i).getRgf();
+			String jsonServidorInfoMax = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute()
+					.body();
+			ServidorInfoMaxJson servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMaxJson.class);
+			ListaServidorInfoMax.add(servidor.converterParaServidorInfoMax());
 		}
 		paraTimer();
 		return ListaServidorInfoMax;
@@ -75,8 +100,10 @@ public class CrawlerPortalTransparencia {
 				.body();
 
 		paraTimer();
-		return objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMax.class);
+		ServidorInfoMaxJson servidorInfoMaxJson = objectMapper.readValue(jsonServidorInfoMax,
+				ServidorInfoMaxJson.class);
 
+		return servidorInfoMaxJson.converterParaServidorInfoMax();
 	}
 
 	private void iniciaTimer() {
@@ -99,6 +126,111 @@ public class CrawlerPortalTransparencia {
 
 	public void setTempoDecorridoUltimaAcao(String tempoDecorridoUltimaAcao) {
 		TempoDecorridoUltimaAcao = tempoDecorridoUltimaAcao;
+	}
+
+	static class ServidorInfoMaxJson {
+
+		private String cargo;
+
+		private String nome;
+		private String regime;
+
+		@JsonDeserialize(using = ReferenciaDeserializer.class)
+		private LocalDate referencia;
+
+		private List<Rendimento> rendimentos;
+		private List<Desconto> descontos;
+		private List<Total> totais;
+		private List<Outro> outros;
+
+		public ServidorInfoMax converterParaServidorInfoMax() {
+
+			Salario salario = new Salario();
+			ServidorInfoMax servidor = new ServidorInfoMax();
+			List<Salario> listaSalario = new ArrayList<>();
+
+			salario.setDataReferencia(referencia);
+			salario.setRendimentos(rendimentos);
+			salario.setDescontos(descontos);
+			salario.setOutros(outros);
+			salario.setTotais(totais);
+
+			
+			listaSalario.add(salario);
+
+			servidor.setSalario(listaSalario);
+
+			servidor.setCargo(cargo);
+			servidor.setNome(nome);
+			servidor.setRegime(regime);
+
+			return servidor;
+		}
+
+		public String getCargo() {
+			return cargo;
+		}
+
+		public void setCargo(String cargo) {
+			this.cargo = cargo;
+		}
+
+		public String getNome() {
+			return nome;
+		}
+
+		public void setNome(String nome) {
+			this.nome = nome;
+		}
+
+		public String getRegime() {
+			return regime;
+		}
+
+		public void setRegime(String regime) {
+			this.regime = regime;
+		}
+
+		public LocalDate getReferencia() {
+			return referencia;
+		}
+
+		public void setReferencia(LocalDate referencia) {
+			this.referencia = referencia;
+		}
+
+		public List<Rendimento> getRendimentos() {
+			return rendimentos;
+		}
+
+		public void setRendimentos(List<Rendimento> rendimentos) {
+			this.rendimentos = rendimentos;
+		}
+
+		public List<Desconto> getDescontos() {
+			return descontos;
+		}
+
+		public void setDescontos(List<Desconto> descontos) {
+			this.descontos = descontos;
+		}
+
+		public List<Total> getTotais() {
+			return totais;
+		}
+
+		public void setTotais(List<Total> totais) {
+			this.totais = totais;
+		}
+
+		public List<Outro> getOutros() {
+			return outros;
+		}
+
+		public void setOutros(List<Outro> outros) {
+			this.outros = outros;
+		}
+
 	}
 
 }
