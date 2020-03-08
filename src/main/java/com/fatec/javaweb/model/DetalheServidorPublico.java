@@ -14,8 +14,9 @@ import org.hibernate.annotations.CascadeType;
 
 import com.fatec.javaweb.model.Salario.Salario;
 
-@Entity(name = "funcionario")
-public class ServidorInfoMax implements BaseModel {
+@Entity
+public class DetalheServidorPublico implements BaseModel {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -23,9 +24,11 @@ public class ServidorInfoMax implements BaseModel {
 	private String cargo;
 
 	private String nome;
+
 	private String regime;
+
 	@OneToMany
-	@JoinColumn(name = "funcionario_id")
+	@JoinColumn(name = "detalhe_id")
 	@Cascade(CascadeType.ALL)
 	private List<Salario> salario;
 
@@ -68,7 +71,5 @@ public class ServidorInfoMax implements BaseModel {
 	public void setSalario(List<Salario> salario) {
 		this.salario = salario;
 	}
-
-	
 
 }
