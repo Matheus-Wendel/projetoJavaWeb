@@ -1,6 +1,5 @@
 package com.fatec.javaweb.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,51 +9,39 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fatec.javaweb.model.ServidorInfoMax;
-import com.fatec.javaweb.model.ServidorInfoMin;
-import com.fatec.javaweb.repository.ServidorInfoMaxRepository;
-import com.fatec.javaweb.service.CrawlerPortalTransparencia;
+import com.fatec.javaweb.model.DetalheServidorPublico;
+import com.fatec.javaweb.repository.DetalheServidorPublicoRepository;
+import com.fatec.javaweb.repository.ServidorPublicoRepository;
 
 @Controller
 @RequestMapping("/servidor")
 public class ServidorInfoMaxController {
 	@Autowired
-	ServidorInfoMaxRepository repository;
+	DetalheServidorPublicoRepository detalheServidorPublicorepository;
+	
+	@Autowired
+	ServidorPublicoRepository servidorPublicorepository;
 
 	@GetMapping(value = "/livre/busca/nome/{nome}")
 	@ResponseBody
-	public List<ServidorInfoMax> buscarServidorPorNome(@PathVariable(required = false, value = "nome") String nome) {
-		return repository.findByNome(nome);
+	public List<DetalheServidorPublico> buscarServidorPorNome(@PathVariable(required = false, value = "nome") String nome) {
+		return detalheServidorPublicorepository.findByNome(nome);
 
 	}
 	@GetMapping(value = "/livre/todos")
 	@ResponseBody
-	public List<ServidorInfoMax> buscarTodos() {
-		return repository.findAll();
+	public List<DetalheServidorPublico> buscarTodos() {
+		return detalheServidorPublicorepository.findAll();
 		
 	}
 	
 	@GetMapping(value = "/livre/busca/id/{id}")
 	@ResponseBody
-	public ServidorInfoMax buscarServidorPorNome(@PathVariable(required = false, value = "id") Long id) {
-		return repository.findById(id).get();
+	public DetalheServidorPublico buscarServidorPorNome(@PathVariable(required = false, value = "id") Long id) {
+		return detalheServidorPublicorepository.findById(id).get();
 		
 	}
 
-	@GetMapping(value = "/livre/inserir")
-	@ResponseBody
-	public String insereTesteNoBanco() throws IOException {
-
-		CrawlerPortalTransparencia crawler = new CrawlerPortalTransparencia();
-
-		List<ServidorInfoMin> servidores = crawler.getConjuntoServidores().getServidores();
-
-		List<ServidorInfoMax> ListaservidoresInfoMax = crawler.getServidoresInfoMax(servidores, 50);
-
-		repository.saveAll(ListaservidoresInfoMax);
-
-		return "Dados inseridos no Banco";
-
-	}
+	
 
 }
