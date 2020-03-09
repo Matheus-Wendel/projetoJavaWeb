@@ -7,34 +7,45 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.14.0/css/mdb.min.css" rel="stylesheet">
-    <script scr="https://cdnj.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-    blogson.com.br
+
     <title>Cadastro de Usuario</title>
 </head>
 
 <body>
     <form class="text-center border border-light p-5" action="#!">
         <p class="h4 mb-4">Cadastro de Usuario</p>
+        <!-- Nome -->
         <div class="form-row mb-4">
             <div class="col">
                 <input type="text" placeholder="Nome" id="defaultFirstName" class="form-control">
             </div>
-
+        <!-- Sobrenome -->
             <div class="col">
                 <input type="text" placeholder="Sobrenome" id="defaultLastName" class="form-control">
             </div>
         </div>
+        <!-- Email -->
         <input type="email" placeholder="Email" id="defaultEmail" class="form-control mb-4">
+        <!-- password -->
         <input type="password" id="defaultPassword" class="form-control" aria-describedby="DefautFormToRegisterPassword" placeholder="Senha">
         <small id="defaultRegisterPasswordHelpBlock" class="form-text text-muted m=b4">
             A senha deve conter pelo menos 8 letra e um digito
         </small>
-        <input type="text" placeholder="CPF" onkeypress="$(this).mask('000.000.000-00');" aria-describedby="defaultRegisterForCPF" class="form-control" id="defaultCPF">
-        <small id="DefautFormToRegisterCPF">
+        <!-- CPF number -->
+        <input type="text" id="defaultCPF" class="form-control" placeholder="CPF"  class="form-control" onkeypress="$(this).mask('000.000.000-00');" aria-describedby="defaultRegisterForCPF" >
+        <small id="DefautFormToRegisterCPF" class="form-text text-muted m=b4>">
             Digite seu CPF
         </small>
-    </form>
+        <!-- Sign up button -->
+        <button class="btn btn-info my-4 btn-block" type="submit">Cadastrar</button>
+        <!-- Termos de uso -->
+        <p>Ao clicar
+            <em>Cadastrar </em> você concorda com os
+            <a href="" target="_blank">termos de uso</a>
+        </p>
 
+    </form>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
