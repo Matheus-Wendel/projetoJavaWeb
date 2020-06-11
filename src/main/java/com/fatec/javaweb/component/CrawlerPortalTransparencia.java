@@ -1,10 +1,7 @@
 package com.fatec.javaweb.component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Jsoup;
 
@@ -20,55 +17,24 @@ public class CrawlerPortalTransparencia {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	private String TempoDecorridoUltimaAcao = "";
-	private Long inicioTimer;
-	private Long fimTimer;
-
 	public ConjuntoServidoresJson getConjuntoServidores() throws IOException {
-
-		iniciaTimer();
 		String jsonServidorInfoMin = Jsoup.connect(URL_INFO_MIN).ignoreContentType(true).execute().body();
-		paraTimer();
-
 		return objectMapper.readValue(jsonServidorInfoMin, ConjuntoServidoresJson.class);
 
 	}
 
-	public List<ServidorPublico> getServidoresPublicos() throws IOException {
-
-		List<ServidorPublico> listaServidoresPublicos = new ArrayList<>();
-		iniciaTimer();
-		for (ServidorInfoMinJson servidorInfoMin : getConjuntoServidores().getServidores()) {
-			String rgf = servidorInfoMin.getRgf();
-			String jsonServidorInfoMax = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute()
-					.body();
-
-			ServidorInfoMaxJson servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMaxJson.class);
-			listaServidoresPublicos.add(montaServidorPublico(servidorInfoMin, servidor));
-		}
-		paraTimer();
-		return listaServidoresPublicos;
-
+	public ServidorInfoMaxJson servidoresInfoMaxJson(String rgf) throws IOException {
+		String json = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute().body();
+		return objectMapper.readValue(json, ServidorInfoMaxJson.class);
 	}
 
-	public List<ServidorPublico> getServidorPublicos(int quantidadeServidores) throws IOException {
-		List<ServidorPublico> listaServidoresPublicos = new ArrayList<>();
-		iniciaTimer();
-		List<ServidorInfoMinJson> servidores = getConjuntoServidores().getServidores();
-		for (int i = 0; i < quantidadeServidores; i++) {
-			
-			String rgf = servidores.get(i).getRgf();
-			String jsonServidorInfoMax = Jsoup.connect(URL_INFO_MAX + rgf).timeout(0).ignoreContentType(true).execute()
-					.body();
-			
-			ServidorInfoMaxJson servidor = objectMapper.readValue(jsonServidorInfoMax, ServidorInfoMaxJson.class);
-			listaServidoresPublicos.add(montaServidorPublico(servidores.get(i), servidor));
-		}
-		
-		
-		paraTimer();
-		return listaServidoresPublicos;
+
+	public ServidorPublico getServidorPublico(ServidorInfoMinJson servidorInfoMin) throws IOException {
+
+		ServidorInfoMaxJson servidor = servidoresInfoMaxJson(servidorInfoMin.getRgf());
+		return montaServidorPublico(servidorInfoMin, servidor);
 	}
+
 
 	public ServidorPublico montaServidorPublico(ServidorInfoMinJson servidorJson, ServidorInfoMaxJson detalhesJson) {
 
@@ -93,31 +59,9 @@ public class CrawlerPortalTransparencia {
 		servidorPublico.setNome(servidorJson.getNome());
 		servidorPublico.setRendimentos(servidorJson.getRendimentos());
 		servidorPublico.setRgf(servidorJson.getRgf());
-		servidorPublico.setDetalhes(Arrays.asList(detalhes));
+		servidorPublico.setDetalhes(detalhes);
 
 		return servidorPublico;
-	}
-
-	private void iniciaTimer() {
-		this.inicioTimer = System.currentTimeMillis();
-	}
-
-	private void paraTimer() {
-		this.fimTimer = System.currentTimeMillis() - inicioTimer;
-
-		this.TempoDecorridoUltimaAcao = String.format("%02d:%02d:%02d %02d", TimeUnit.MILLISECONDS.toHours(fimTimer),
-				TimeUnit.MILLISECONDS.toMinutes(fimTimer) % TimeUnit.HOURS.toMinutes(1),
-				TimeUnit.MILLISECONDS.toSeconds(fimTimer) % TimeUnit.MINUTES.toSeconds(1),
-				TimeUnit.MILLISECONDS.toMillis(fimTimer) % TimeUnit.SECONDS.toMillis(1));
-
-	}
-
-	public String getTempoDecorridoUltimaAcao() {
-		return TempoDecorridoUltimaAcao;
-	}
-
-	public void setTempoDecorridoUltimaAcao(String tempoDecorridoUltimaAcao) {
-		TempoDecorridoUltimaAcao = tempoDecorridoUltimaAcao;
 	}
 
 }

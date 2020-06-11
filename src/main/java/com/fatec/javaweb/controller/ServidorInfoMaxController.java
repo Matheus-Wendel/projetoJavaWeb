@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fatec.javaweb.model.DetalheServidorPublico;
+import com.fatec.javaweb.model.ServidorPublico;
 import com.fatec.javaweb.repository.DetalheServidorPublicoRepository;
 import com.fatec.javaweb.repository.ServidorPublicoRepository;
 
@@ -24,8 +25,8 @@ public class ServidorInfoMaxController {
 
 	@GetMapping(value = "/livre/busca/nome/{nome}")
 	@ResponseBody
-	public List<DetalheServidorPublico> buscarServidorPorNome(@PathVariable(required = false, value = "nome") String nome) {
-		return detalheServidorPublicorepository.findByNome(nome);
+	public List<ServidorPublico> buscarServidorPorNome(@PathVariable(required = false, value = "nome") String nome) {
+		return servidorPublicorepository.findByNome(nome);
 
 	}
 	@GetMapping(value = "/livre/todos")
@@ -39,6 +40,18 @@ public class ServidorInfoMaxController {
 	@ResponseBody
 	public DetalheServidorPublico buscarServidorPorNome(@PathVariable(required = false, value = "id") Long id) {
 		return detalheServidorPublicorepository.findById(id).get();
+		
+	}
+	@GetMapping(value = "/livre/busca/salarioMaior/{salario}")
+	@ResponseBody
+	public List<ServidorPublico> buscarServidorPorSalarioMaiorQue(@PathVariable(required = true, value = "salario") Double salario) {
+		return servidorPublicorepository.buscaPorSalarioMaiorQue(salario);
+		
+	}
+	@GetMapping(value = "/livre/busca/salarioMenor/{salario}")
+	@ResponseBody
+	public List<ServidorPublico> buscarServidorPorSalarioMenorQue(@PathVariable(required = true, value = "salario") Double salario) {
+		return servidorPublicorepository.buscaPorSalarioMaiorQue(salario);
 		
 	}
 

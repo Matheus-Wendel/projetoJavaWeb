@@ -3,6 +3,7 @@ package com.fatec.javaweb.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class DetalheServidorPublico implements BaseModel {
 
 	private String regime;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "detalhe_id")
 	@Cascade(CascadeType.ALL)
 	private List<Salario> salario;

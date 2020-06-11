@@ -1,14 +1,13 @@
 package com.fatec.javaweb.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -29,11 +28,10 @@ public class ServidorPublico implements BaseModel {
 
 	@JsonDeserialize(using = RendimentoDeserializer.class)
 	private Double rendimentos;
-
-	@OneToMany
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_sevidor")
 	@Cascade(CascadeType.ALL)
-	private List<DetalheServidorPublico> detalhes;
+	private DetalheServidorPublico detalhes;
 
 	public Long getId() {
 		return id;
@@ -43,11 +41,11 @@ public class ServidorPublico implements BaseModel {
 		this.id = id;
 	}
 
-	public List<DetalheServidorPublico> getDetalhes() {
+	public DetalheServidorPublico getDetalhes() {
 		return detalhes;
 	}
 
-	public void setDetalhes(List<DetalheServidorPublico> detalhes) {
+	public void setDetalhes(DetalheServidorPublico detalhes) {
 		this.detalhes = detalhes;
 	}
 
