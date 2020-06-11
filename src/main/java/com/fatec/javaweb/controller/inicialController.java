@@ -1,17 +1,18 @@
 package com.fatec.javaweb.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fatec.javaweb.component.ConjuntoServidoresJson;
+import com.fatec.javaweb.component.CrawlerPortalTransparencia;
+import com.fatec.javaweb.component.ServidorInfoMinJson;
 import com.fatec.javaweb.model.ServidorPublico;
 import com.fatec.javaweb.repository.ServidorPublicoRepository;
 
@@ -40,11 +41,26 @@ public class inicialController {
 		return "kdaksdljaksdjalksjdl";
 	}
 
-	@PostMapping(value = "/testeJack")
+	@GetMapping(value = "/cadastrar")
 	@ResponseBody
-	public String serializacao() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(servidorPublicoRepository.findAll().get(0));
+	public String serializacao() throws IOException {
+		CrawlerPortalTransparencia crawler = new CrawlerPortalTransparencia();
+		ConjuntoServidoresJson conjuntoServidores;
+
+		conjuntoServidores = crawler.getConjuntoServidores();
+		
+		
+		for (ServidorInfoMinJson servidorInfoMin : conjuntoServidores.getServidores()) {
+			int i = 0;
+			servidorPublicoRepository.save(crawler.getServidorPublico(servidorInfoMin));
+			System.err.println(("Inserido " + servidorInfoMin.getNome()));
+			if(i==50) {
+				break;
+			}
+			
+		}
+		
+		return "feito";
 
 	}
 }
