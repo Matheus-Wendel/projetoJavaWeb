@@ -15,13 +15,13 @@ import com.fatec.javaweb.component.CrawlerPortalTransparencia;
 import com.fatec.javaweb.component.ServidorInfoMinJson;
 import com.fatec.javaweb.model.ServidorPublico;
 import com.fatec.javaweb.repository.ServidorPublicoRepository;
+import com.fatec.javaweb.service.ServidorPublicoService;
 
 @Controller
 @RequestMapping("")
 public class inicialController {
-	@Autowired
-	ServidorPublicoRepository servidorPublicoRepository;
-
+	
+	
 	@GetMapping(value = "")
 	public ModelAndView inicial() {
 		ModelAndView mv = new ModelAndView("inicial/index");
@@ -29,11 +29,7 @@ public class inicialController {
 	}
 
 
-	@GetMapping(value = "/doBanco")
-	@ResponseBody
-	public List<ServidorPublico> listaInseridosNoBanco() {
-		return servidorPublicoRepository.findAll();
-	}
+	
 
 	@GetMapping(value = "/administrativo")
 	@ResponseBody
@@ -41,26 +37,5 @@ public class inicialController {
 		return "kdaksdljaksdjalksjdl";
 	}
 
-	@GetMapping(value = "/cadastrar")
-	@ResponseBody
-	public String serializacao() throws IOException {
-		CrawlerPortalTransparencia crawler = new CrawlerPortalTransparencia();
-		ConjuntoServidoresJson conjuntoServidores;
-
-		conjuntoServidores = crawler.getConjuntoServidores();
-		
-		
-		for (ServidorInfoMinJson servidorInfoMin : conjuntoServidores.getServidores()) {
-			int i = 0;
-			servidorPublicoRepository.save(crawler.getServidorPublico(servidorInfoMin));
-			System.err.println(("Inserido " + servidorInfoMin.getNome()));
-			if(i==50) {
-				break;
-			}
-			
-		}
-		
-		return "feito";
-
-	}
+	
 }
