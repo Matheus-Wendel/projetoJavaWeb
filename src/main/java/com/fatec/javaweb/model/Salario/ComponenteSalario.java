@@ -23,6 +23,7 @@ public abstract class ComponenteSalario implements BaseModel{
 		return id;
 	}
 
+	//comentario
 	public void setId(Long id) {
 		this.id = id;
 	}
